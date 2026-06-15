@@ -32,9 +32,18 @@ public final class BillingCalculator {
      * @return Valor total em reais (R$).
      */
     public static double calcularValorTotal(Chamado chamado) {
+        double valorAntesTaxa = calcularValorAntesTaxaHorario(chamado);
+        return aplicarTaxaForaHorarioComercial(valorAntesTaxa, chamado.getDataAbertura());
+    }
+
+    /**
+     * Calcula o valor do chamado considerando apenas tipo e urgência,
+     * sem aplicar a taxa de fora-de-horário comercial.
+     * Útil para logs que precisam mostrar o valor antes do recálculo.
+     */
+    public static double calcularValorAntesTaxaHorario(Chamado chamado) {
         double valorBase = calcularValorBase(chamado);
-        double valorComUrgencia = aplicarMultiplicadorUrgencia(valorBase, chamado);
-        return aplicarTaxaForaHorarioComercial(valorComUrgencia, chamado.getDataAbertura());
+        return aplicarMultiplicadorUrgencia(valorBase, chamado);
     }
 
     /**

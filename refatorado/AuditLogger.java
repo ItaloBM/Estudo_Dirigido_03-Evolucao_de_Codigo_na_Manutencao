@@ -1,7 +1,7 @@
 package refatorado;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 /**
  * Classe responsável pela formatação e registro de logs de auditoria.
@@ -30,6 +30,7 @@ public final class AuditLogger {
                                           String prioridade, int slaHoras,
                                           double valorTotal) {
         String mensagem = String.format(
+                Locale.US,
                 "[%s] CHAMADO #%d | Titulo: %s | Usuario: %s | Prioridade: %s | SLA: %dh | Valor: R$%.2f",
                 chamado.getDataAbertura().format(FORMATO_DATA),
                 idChamado,
@@ -52,6 +53,7 @@ public final class AuditLogger {
     public static void registrarRecalculoForaHorario(int idChamado, Chamado chamado,
                                                       double valorFinal) {
         String mensagem = String.format(
+                Locale.US,
                 "[%s] RECALCULO CHAMADO #%d | Titulo: %s | Taxa extra aplicada: 35%% | Novo Valor: R$%.2f | Obs: FORA_HORARIO",
                 chamado.getDataAbertura().format(FORMATO_DATA),
                 idChamado,

@@ -1,6 +1,7 @@
 package refatorado;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -37,9 +38,10 @@ public class TicketProcessor {
 
         String rotuloprioridade = definirRotuloPrioridade(chamado);
         int slaHoras = SlaEvaluator.calcularSlaHoras(chamado);
+        double valorAntesTaxa = BillingCalculator.calcularValorAntesTaxaHorario(chamado);
         double valorTotal = BillingCalculator.calcularValorTotal(chamado);
 
-        AuditLogger.registrarAbertura(idChamado, chamado, rotuloprioridade, slaHoras, valorTotal);
+        AuditLogger.registrarAbertura(idChamado, chamado, rotuloprioridade, slaHoras, valorAntesTaxa);
 
         if (BillingCalculator.isForaDoHorarioComercial(chamado.getDataAbertura())) {
             AuditLogger.registrarRecalculoForaHorario(idChamado, chamado, valorTotal);
@@ -86,6 +88,7 @@ public class TicketProcessor {
                 ? "FORA_HORARIO" : "HORARIO_COMERCIAL";
 
         System.out.printf(
+                Locale.US,
                 "INSERT INTO chamados (id, titulo, descricao, usuario, prioridade, sla_horas, valor, horario_flag, data_abertura) "
                 + "VALUES (%d, '%s', '%s', '%s', '%s', %d, %.2f, '%s', '%s')%n",
                 idChamado, chamado.getTitulo(), chamado.getDescricao(),
@@ -145,10 +148,10 @@ public class TicketProcessor {
         @Override
         public String toString() {
             if (sucesso) {
-                return String.format("OK | ID=%d | Prioridade=%s | SLA=%dh | Valor=R$%.2f | %s",
+                return String.format(Locale.US, "OK | ID=%d | Prioridade=%s | SLA=%dh | Valor=R$%.2f | %s",
                         idChamado, prioridade, slaHoras, valorTotal, flagHorario);
             }
-            return String.format("ERRO | ID=%d | %s", idChamado, mensagemErro);
+            return String.format(Locale.US, "ERRO | ID=%d | %s", idChamado, mensagemErro);
         }
     }
 
